@@ -1,0 +1,4 @@
+<map id="I2C_Thermo" name="I2C_Thermo">
+<area shape="rect" id="node1" title="Base class for thermal sensors which use an I2C bus to communicate with a microcontroller." alt="" coords="23,80,117,107"/>
+<area shape="rect" id="node2" href="$class_base_thermometer.html" title="A base class for many sorts of thermometers." alt="" coords="5,5,135,32"/>
+</map>

@@ -1,5 +1,5 @@
 /** @file inheritance.cpp
- *    This file contains a main program that creates and tests a child class.
+ *  This file contains a main program that creates and tests a child class.
  * 
  *  @author JR Ridgely
  *  @date   2008-Feb-03 Original file
@@ -8,53 +8,78 @@
  *  @date   2009-Jan-29 Changed again to use even newer serial port classes
  *  @date   2020-Nov-05 Ported to STM32 using the Arduino environment
  *  @date   2020-Nov-06 Morphed into inheritance demo and fixed a crash
+ *  @date   2021-Nov-16 Changed from IMU to thermometer to focus on inheritance
+ * 
+ *  @mainpage Example of Class Inheritance
+ *  In this example, we create a set of classes which all interface with
+ *  temperature sensors. There is a class which operates a real temperature
+ *  sensor connected to the microcontroller through an I2C bus, and there is
+ *  a class which just simulates a sensor. Because both sensors (real and
+ *  simulated) need to be able to return temperatures, the classes are
+ *  descended from a common parent class called BaseThermometer. 
  */
 
 #include <Arduino.h>
 #include <PrintStream.h>
-#include "sim_imu.h"
+#if (defined STM32L4xx || defined STM32F4xx)
+    #include <STM32FreeRTOS.h>
+    #include <HardwareTimer.h>
+#endif
+
+#include <Wire.h>
+#include "mcp9808.h"
+#include "sim_thermo.h"
 
 
-/// A pointer to an IMU object which will be of a child class, not I2C_IMU
-I2C_IMU* p_imu = NULL;
+/** @brief   Task which runs the thermometer test. 
+ *  @param   p_params An ignored pointer to no parameters
+ */
+void task_test_thermo (void* p_params)
+{
+    // Start the I2C (wire) interface to be used to talk to a real sensor
+    Wire.begin ();
+
+    // Create sensor object. If you look at the code below this line which runs
+    // the test, you'll see that the code below doesn't change if other kinds 
+    // of temperature sensor are used (the name of the sensor object changes, 
+    // but not the function calls
+    // MCP9808 real_thermo (&Wire, 0x18);
+    SimThermometer fake_thermo (30.0, 12.0, 30.0, 1.7);
+
+    // Print a scan showing devices found on the I2C bus
+    // real_thermo.I2C_scan (Serial);
+
+    // In the task loop, keep getting temperatures and printing them
+    for (;;)
+    {
+        Serial << "Sim Temp, " << fake_thermo.celsius () << endl;
+
+        delay (1000);
+    }
+}
 
 
-/** @brief   The Arduino setup function runs all the tests in this program.
+/** @brief   The Arduino setup function initializes tasks and makes them run.
  */
 void setup ()
 {
     Serial.begin (115200);
-    delay (1000);
+    delay (5000);
     Serial << endl << "\033[2JME507 Inherited Method Test" << endl;
 
-    // Create a simulated IMU object. If you look at the code below this line
-    // which runs the test, that code doesn't change if other kinds of IMU are
-    // used. The object must be static so it's not gone when setup() has exited
-    static Sim_IMU wobbly (0x42, "Wobbly");
-    p_imu = &wobbly;
+    // Create a task which makes and tests a thermometer object of some sort
+    xTaskCreate (task_test_thermo, "Thermo", 2048, NULL, 5, NULL);
+
+    #if (defined STM32L4xx || defined STM32F4xx)
+        vTaskStartScheduler ();
+    #endif
 }
 
 
-/** @brief   The Arduino loop function runs some sort of IMU and prints the
- *           accelerations it has found.
- *  @details This function uses a pointer to the IMU object, p_imu, and it
- *           doesn't know nor care which descendent class of I2C_IMU it's
- *           using; it just calls methods that every IMU class supplies. 
- *           If we add a new class that works with an IMU invented next year,
- *           this code won't have to change at all to use that new IMU.
+/** @brief   The Arduino loop function isn't active in this program.
  */
 void loop () 
 {
-    if (p_imu)            // Only do this if the IMU pointer points to an IMU
-    {
-        // Serial << "AX: " << p_imu->get_ax ()
-        //     << ", AY: " << p_imu->get_ay () << ", AZ: " << p_imu->get_az ()
-        //     << ", RotX: " << p_imu->get_x_rate () 
-        //     << ", RotY: " << p_imu->get_y_rate ()
-        //     << ", RotZ: " << p_imu->get_z_rate () << endl;
-
-        Serial << *p_imu << endl;
-    }
     delay (1000);
 }
 

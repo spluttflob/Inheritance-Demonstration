@@ -1,0 +1,4 @@
+<map id="SimThermometer" name="SimThermometer">
+<area shape="rect" id="node1" title="Class which simulates a thermometer." alt="" coords="9,80,131,107"/>
+<area shape="rect" id="node2" href="$class_base_thermometer.html" title="A base class for many sorts of thermometers." alt="" coords="5,5,135,32"/>
+</map>

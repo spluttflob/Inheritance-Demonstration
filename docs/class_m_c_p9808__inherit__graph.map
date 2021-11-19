@@ -1,0 +1,5 @@
+<map id="MCP9808" name="MCP9808">
+<area shape="rect" id="node1" title="Driver for the Microchip MCP9808 temperature sensor IC." alt="" coords="30,155,110,181"/>
+<area shape="rect" id="node2" href="$class_i2_c___thermo.html" title="Base class for thermal sensors which use an I2C bus to communicate with a microcontroller." alt="" coords="23,80,117,107"/>
+<area shape="rect" id="node3" href="$class_base_thermometer.html" title="A base class for many sorts of thermometers." alt="" coords="5,5,135,32"/>
+</map>

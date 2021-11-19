@@ -1,0 +1,6 @@
+<map id="BaseThermometer" name="BaseThermometer">
+<area shape="rect" id="node1" title="A base class for many sorts of thermometers." alt="" coords="55,5,184,32"/>
+<area shape="rect" id="node2" href="$class_i2_c___thermo.html" title="Base class for thermal sensors which use an I2C bus to communicate with a microcontroller." alt="" coords="5,80,100,107"/>
+<area shape="rect" id="node4" href="$class_sim_thermometer.html" title="Class which simulates a thermometer." alt="" coords="125,80,247,107"/>
+<area shape="rect" id="node3" href="$class_m_c_p9808.html" title="Driver for the Microchip MCP9808 temperature sensor IC." alt="" coords="13,155,93,181"/>
+</map>
